@@ -1,0 +1,21 @@
+{
+  "title": "Robin's Daily News",
+  "description": "One fresh briefing from each selected news source.",
+  "max_age_hours": 72,
+  "sources": [
+    {"name": "BBC Global News Podcast", "search": "Global News Podcast", "publisher": "BBC", "enabled": true},
+    {"name": "NPR News Now", "feed_url": "https://feeds.npr.org/500005/podcast.xml", "enabled": true},
+    {"name": "Reuters World News", "search": "Reuters World News", "publisher": "Reuters", "enabled": true},
+    {"name": "Sky News Daily", "search": "Sky News Daily", "publisher": "Sky News", "enabled": true},
+    {"name": "CNN 5 Things", "search": "CNN 5 Things", "publisher": "CNN", "enabled": true},
+    {"name": "CBC World Report", "search": "CBC News World Report", "publisher": "CBC", "enabled": true},
+    {"name": "CNBC TechCheck", "search": "CNBC TechCheck", "publisher": "CNBC", "enabled": true},
+    {"name": "Weird AF News", "search": "Weird AF News", "enabled": true},
+    {"name": "POLITICO Playbook Daily Briefing", "search": "POLITICO Playbook Daily Briefing", "publisher": "POLITICO", "enabled": true},
+    {"name": "DW News Brief", "search": "DW News Brief", "publisher": "DW", "enabled": true},
+    {"name": "IGN Daily Fix", "search": "IGN Daily Fix", "publisher": "IGN", "enabled": true},
+    {"name": "Science by SciTech Brief", "search": "Science SciTech Brief", "enabled": true},
+    {"name": "The Intelligence", "feed_env": "ECONOMIST_RSS_URL", "enabled": true},
+    {"name": "NPR Technology", "search": "NPR technology", "publisher": "NPR", "enabled": true}
+  ]
+}
