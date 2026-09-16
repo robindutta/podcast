@@ -64,6 +64,8 @@ def build(config, base_url):
             episode = newest(get(url))
             if not episode: raise ValueError("feed has no playable audio enclosure")
             published, item, audio, enclosure = episode
+            if audio.startswith("http://"):
+                audio = "https://" + audio[len("http://"):]
             age = (now - published).total_seconds() / 3600
             if age > config.get("max_age_hours", 72): raise ValueError(f"newest episode is {age:.0f} hours old")
             title = text_of(item, "title") or source["name"]
@@ -77,13 +79,21 @@ def build(config, base_url):
             status.append({"source": source["name"], "status": "included", "feed": url, "episode": title})
         except Exception as e:
             status.append({"source": source["name"], "status": "skipped", "reason": str(e)})
-    lines=['<?xml version="1.0" encoding="UTF-8"?>','<rss version="2.0"><channel>',
+    feed_url = urllib.parse.urljoin(base_url.rstrip("/") + "/", "feed.xml")
+    lines=['<?xml version="1.0" encoding="UTF-8"?>',
+           '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"><channel>',
            f'<title>{esc(config["title"])}</title>', f'<link>{esc(base_url)}</link>',
            f'<description>{esc(config["description"])}</description>', '<language>en-gb</language>',
+           f'<atom:link href="{esc(feed_url)}" rel="self" type="application/rss+xml"/>',
+           '<itunes:type>episodic</itunes:type>', '<itunes:author>Robin Dutta</itunes:author>',
+           f'<itunes:summary>{esc(config["description"])}</itunes:summary>',
+           '<itunes:explicit>false</itunes:explicit>', '<itunes:category text="News"/>',
            f'<lastBuildDate>{email.utils.format_datetime(now)}</lastBuildDate>']
     for x in selected:
-        lines += ['<item>', f'<title>{esc(x["source"]+" — "+x["title"])}</title>',
+        item_title = x["source"]+" — "+x["title"]
+        lines += ['<item>', f'<title>{esc(item_title)}</title>', f'<itunes:title>{esc(item_title)}</itunes:title>',
                   f'<description>{esc(x["description"])}</description>', f'<guid isPermaLink="false">{x["guid"]}</guid>',
+                  f'<link>{esc(x["audio"])}</link>', '<itunes:episodeType>full</itunes:episodeType>',
                   f'<pubDate>{email.utils.format_datetime(x["date"])}</pubDate>',
                   f'<enclosure url="{esc(x["audio"])}" length="{esc(x["length"])}" type="{esc(x["mime"])}"/>', '</item>']
     lines += ['</channel></rss>']
